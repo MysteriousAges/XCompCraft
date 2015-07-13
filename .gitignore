@@ -1,0 +1,27 @@
+# IntelliJ IDEA Files
+*.iml
+*.ipr
+*.iws
+out/
+.idea/
+
+# Eclipse Project Files
+.classpath
+.project
+.settings/
+eclipse/
+
+# Gradle
+.gradle
+gradle/
+build/
+debug/
+bin/
+config/
+crash-reports/
+logs/
+mods/
+saves/
+usernamecache.json
+options.txt
+asm
