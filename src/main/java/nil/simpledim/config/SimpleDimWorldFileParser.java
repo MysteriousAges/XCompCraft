@@ -24,6 +24,7 @@ public class SimpleDimWorldFileParser {
 		(?:[^{]*?biome\s*:\s*(?<biome>[A-z]+))?
 		(?:[^{]*?biomeList\s*:\s*\[(?<biomeList>[A-z, ]+)])?
 		(?:[^{]*?seed\s*:\s*(?<seed>(?:0x\d+)|(?:-?\d+)))?
+		(?:[^{]*?loadSpawn\s*:\s*(?<loadSpawn>(?:true|false)))?
 		(?:[^{])*}
 	*/
 	private static String theRegex = "(?<name>[A-z]+)\\s*\\{\\s*"
@@ -34,6 +35,7 @@ public class SimpleDimWorldFileParser {
 				+ "(?:[^{]*?biome\\s*:\\s*(?<biome>[A-z]+))?"
 				+ "(?:[^{]*?biomeList\\s*:\\s*\\[(?<biomeList>[A-z, ]+)])?"
 				+ "(?:[^{]*?seed\\s*:\\s*(?<seed>(?:0x\\d+)|(?:-?\\d+)))?"
+				+ "(?:[^{]*?loadSpawn\\s*:\\s*(?<loadSpawn>(?:true|false)))?"
 				+ "(?:[^{])*?\\}";
 	private Pattern pattern;
 	
@@ -96,6 +98,12 @@ public class SimpleDimWorldFileParser {
 		if (tmp != null && !tmp.isEmpty()) {
 			info.biomeList = parseBiomeListFromString(tmp);
 		}
+		
+		tmp = matcher.group("loadSpawn");
+		if (tmp != null && !tmp.isEmpty()) {
+			info.loadSpawn = Boolean.parseBoolean(tmp);
+		}
+		
 		return info;
 	}
 

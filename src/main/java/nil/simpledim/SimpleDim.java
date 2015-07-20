@@ -1,11 +1,7 @@
 package nil.simpledim;
 
-import net.minecraft.world.WorldType;
-import net.minecraftforge.common.DimensionManager;
 import nil.simpledim.config.Config;
 import nil.simpledim.item.TeleporterItem;
-import nil.simpledim.world.SimpleDimWorldProvider;
-import nil.simpledim.world.type.EmptyWorldType;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,7 +20,6 @@ public class SimpleDim {
 	public static SimpleDim modRef;
 	
 	public Config config;
-	public WorldType worldType;
 	public TeleporterItem teleporterItem;
 
 	@EventHandler
@@ -37,14 +32,11 @@ public class SimpleDim {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		//worldType = new SingleBiomeWorldType();
-		worldType = new EmptyWorldType();
+		config.registerDimenions();
 	}
 	
 	@EventHandler
 	public void postInit(FMLInitializationEvent event) {
-		DimensionManager.registerProviderType(SimpleDimWorldProvider.WORLD_PROVIDER_ID, SimpleDimWorldProvider.class, true);//config.dimensionSpawnIsLoaded);
-		DimensionManager.registerDimension(config.dimensionId, SimpleDimWorldProvider.WORLD_PROVIDER_ID);
 	}
 	
 	@EventHandler
@@ -55,5 +47,9 @@ public class SimpleDim {
 	@EventHandler
 	public void serverStop(FMLServerStoppedEvent event) {
 		
+	}
+	
+	public static Config getConfig() {
+		return modRef.config;
 	}
 }

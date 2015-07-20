@@ -8,17 +8,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.world.WorldType;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import nil.simpledim.LogHelper;
 import nil.simpledim.SimpleDim;
+import nil.simpledim.world.SimpleDimWorldProvider;
 
 import org.apache.commons.io.FileUtils;
 
 public class Config {
 	
-	public int dimensionId;
-	public boolean dimensionSpawnIsLoaded; 
+	public boolean dimensionSpawnIsLoaded;
+	
+	public static WorldType SINGLE_BIOME = new SingleBiomeWorldType();
+	public static WorldType VOID;
 	
 	public static String GENERAL = "General";
 	
@@ -44,13 +49,13 @@ public class Config {
 	public void update() {
 		parseFile();
 	}
+	
+	public DimensionInfo getDimensionInfoForWorld(int dimId) {
+		return dimensionProperties.get(dimId);
+	}
 
 	private void parseFile() {
-		Property p = configuration.get(GENERAL, "dimensionId", 2);
-		dimensionId = p.getInt();
-		if (dimensionId <= -1 && 1 <= dimensionId) {
-			throw new RuntimeException("SimpleDim cannot be set to dimension IDs -1, 0, or 1!");
-		}
+		Property p;
 		
 		p = configuration.get(GENERAL, "keepDimensionSpawnLoaded", true);
 		dimensionSpawnIsLoaded = p.getBoolean();
@@ -58,8 +63,7 @@ public class Config {
 		if (configuration.hasChanged()) {
 			configuration.save();
 		}
-	}
-	
+	}	
 	
 	private void processDimensionFiles(File path) {
 		String dimDirPath = path.getPath() + File.separatorChar + SimpleDim.NAME;
@@ -119,6 +123,14 @@ public class Config {
 			FileUtils.copyURLToFile(source, dimReadme);
 		} catch (IOException e) {
 			LogHelper.error("Could not create dimension info file " + dimReadme.getPath());
+		}
+	}
+
+	public void registerDimenions() {
+		DimensionManager.registerProviderType(SimpleDimWorldProvider.WORLD_PROVIDER_ID, SimpleDimWorldProvider.class, dimensionSpawnIsLoaded);
+		
+		for (DimensionInfo info : dimensionProperties.values()) {
+			DimensionManager.registerDimension(info.dimensionId, SimpleDimWorldProvider.WORLD_PROVIDER_ID);
 		}
 	}
 

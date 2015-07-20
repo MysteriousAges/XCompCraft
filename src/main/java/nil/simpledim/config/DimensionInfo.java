@@ -13,6 +13,7 @@ public class DimensionInfo {
 	public String superflatGenerator;
 	public BiomeGenBase biome;
 	public BiomeGenBase[] biomeList;
+	public boolean loadSpawn;
 	
 	public DimensionInfo() {
 		dimensionId = 0;

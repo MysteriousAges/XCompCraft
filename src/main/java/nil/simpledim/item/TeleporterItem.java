@@ -2,13 +2,9 @@ package nil.simpledim.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import nil.simpledim.SimpleDim;
-import nil.simpledim.SimpleDimTeleporter;
 
 public class TeleporterItem extends Item {
 
@@ -20,7 +16,7 @@ public class TeleporterItem extends Item {
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-		if (entityPlayer != null && !entityPlayer.isRiding() && entityPlayer instanceof EntityPlayerMP) {
+		/*if (entityPlayer != null && !entityPlayer.isRiding() && entityPlayer instanceof EntityPlayerMP) {
 			EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
 			
 			int currentDim = world.provider.dimensionId;
@@ -34,7 +30,7 @@ public class TeleporterItem extends Item {
 				SimpleDimTeleporter teleporter = new SimpleDimTeleporter(MinecraftServer.getServer().worldServerForDimension(targetDim));
 				player.mcServer.getConfigurationManager().transferPlayerToDimension(player, targetDim, teleporter);
 			}
-		}
+		}*/
 		return itemStack;
 	}
 }

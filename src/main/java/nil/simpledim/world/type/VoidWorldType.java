@@ -4,10 +4,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
+import nil.simpledim.config.DimensionInfo;
+import nil.simpledim.world.SimpleDimWorldProvider;
 
-public class EmptyWorldType extends WorldType {
+public class VoidWorldType extends WorldType {
 
-	public EmptyWorldType() {
+	public VoidWorldType() {
 		super("Empty World");
 	}
 
@@ -23,7 +25,12 @@ public class EmptyWorldType extends WorldType {
 
 	@Override
 	public IChunkProvider getChunkGenerator(World world, String generatorOptions) {
-		return new ChunkProviderFlat(world, world.getSeed(), false, "2;1x0");
+		String generationString = "2;1x0";
+		DimensionInfo dimInfo = ((SimpleDimWorldProvider)(world.provider)).getDimensionInfo();
+		if (dimInfo.biome != null) {
+			generationString = generationString + ";" + dimInfo.biome.biomeID; 
+		}
+		return new ChunkProviderFlat(world, world.getSeed(), false, generationString);
 	}
 
 	@Override

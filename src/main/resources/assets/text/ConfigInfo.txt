@@ -27,6 +27,25 @@ There are two parameters required for all dimensions:
 						parameter to set which biome is used, and the seed parameter to change up
 						the terrain if desired.
 			void - Creates an empty world with nothing inside.
+
+These parameters can be used with any dimension type:
+	
+	spawn: Used to set the spawn location of the dimension.
+			Set of 3 comma separated integers. Enclosing with parentheses is recommended, but not
+			strictly required. (x, y, z) where y cannot be negative. (Don't spawn under the world!)
+			Usable with all world types.
+	
+	seed: Sets the seed for the dimension, overriding the global server seed. Useful to recreate
+			your perfect world in a dimension, or bring past servers to your new server with
+			seamless terrain generation.
+			Integer to use as the seed. Can be specified in decimal with optional negative sign (-)
+			or as a hexadecimal value.
+			Applicable to 'superflat', 'overworld' and 'singleBiome' types. (Void type may use it,
+			but will not affect terrain, since there is none.)
+	
+	loadSpawn: Whether or not the spawn of the dimension should be loaded regardless of whether
+			players are present. May help speed up transfer time to the dimension.
+			Either 'true' or 'false. Other values will be ignored.
 	
 Other types of parameters are used in conjunction with specific types of dimensions:
 	
@@ -36,24 +55,11 @@ Other types of parameters are used in conjunction with specific types of dimensi
 			Must be enclosed with either single or double quotes.
 			Only applicable to 'superflat' type.
 	
-	spawn: Used to set the spawn location of the dimension.
-			Set of 3 comma separated integers. Enclosing with parentheses is recommended, but not
-			strictly required. (x, y, z) where y cannot be negative. (Don't spawn under the world!)
-			Useable with all world types.
-	
 	biome: Used to set the biome of 'singleBiome' worlds, specified as the biome name without
 			spaces. "plains", "extremeHills", "mushroomIsland" etc. Mod biomes that have assigned
 			names are supported.
 			Name of the biome.
 			Only applicable to 'singleBiome' type.
-	
-	seed: Sets the seed for the dimension, overriding the global server seed. Useful to recreate
-			your perfect world in a dimension, or bring past servers to your new server with
-			seamless terrain generation.
-			Integer to use as the seed. Can be specified in decimal with optional negative sign (-)
-			or as a hexadecimal value.
-			Applicable to 'superflat', 'overworld' and 'singleBiome' types. (Void type may use it,
-			but will not affect terrain, since there is none.)
 
 Example Entries:
 

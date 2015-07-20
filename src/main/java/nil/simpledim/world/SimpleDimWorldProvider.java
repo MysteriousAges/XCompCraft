@@ -2,79 +2,53 @@ package nil.simpledim.world;
 
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.WorldSettings.GameType;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
 import nil.simpledim.SimpleDim;
+import nil.simpledim.config.DimensionInfo;
 
 public class SimpleDimWorldProvider extends WorldProvider {
 
 	public static final int WORLD_PROVIDER_ID = 0x946731;
 	
-	protected WorldType worldType;
-	
+	private DimensionInfo dimInfo;
+		
 	public SimpleDimWorldProvider() {
 		super();
-		worldType = SimpleDim.modRef.worldType;
-	}
-	
-	@Override
-	public String getDimensionName() {
-		return "SimpleDim";
 	}
 
 	@Override
-	public BiomeGenBase getBiomeGenForCoords(int x, int z) {
-		return BiomeGenBase.plains;
+	public String getDimensionName() {
+		return dimInfo.name;
 	}
 	
+	public DimensionInfo getDimensionInfo() {
+		return dimInfo;
+	}
+
 	@Override
-	public IChunkProvider createChunkGenerator() {
-		return worldType.getChunkGenerator(worldObj, field_82913_c);
+	public ChunkCoordinates getSpawnPoint() {
+		if (dimInfo.spawnPoint != null) {
+			return dimInfo.spawnPoint;
+		}
+		return super.getSpawnPoint();
+	}
+
+	@Override
+	public void setDimension(int dim) {
+		super.setDimension(dim);
+		dimInfo = SimpleDim.getConfig().getDimensionInfoForWorld(dim);
+		if (dimInfo == null) {
+			throw new RuntimeException("SimpleDimWorldProvider is providing a world for an unregistered dimension (" + dim + ") - WTF?");
+		}
 	}
 
 	@Override
 	protected void registerWorldChunkManager() {
-        this.worldChunkMgr = worldType.getChunkManager(worldObj);
+		terrainType = dimInfo.type.getWorldType();
+		if (dimInfo.seedOverride != null) {
+			worldObj.getWorldInfo().randomSeed = dimInfo.seedOverride.intValue();
+		}
+		
+		super.registerWorldChunkManager();
 	}
 
-	@Override
-	public float getCloudHeight() {
-		return worldType.getCloudHeight();
-	}
-
-	@Override
-	public int getAverageGroundLevel() {
-		return worldType.getMinimumSpawnHeight(worldObj);
-	}
-
-	@Override
-	public boolean getWorldHasVoidParticles() {
-		return worldType.hasVoidParticles(hasNoSky);
-	}
-
-	@Override
-	public double getVoidFogYFactor() {
-		return worldType.voidFadeMagnitude();
-	}
-	
-	@Override
-    public ChunkCoordinates getRandomizedSpawnPoint()
-    {
-        ChunkCoordinates chunkcoordinates = new ChunkCoordinates(this.worldObj.getSpawnPoint());
-
-        boolean isAdventure = worldObj.getWorldInfo().getGameType() == GameType.ADVENTURE;
-        int spawnFuzz = worldType.getSpawnFuzz();
-        int spawnFuzzHalf = spawnFuzz / 2;
-
-        if (!hasNoSky && !isAdventure && net.minecraftforge.common.ForgeModContainer.defaultHasSpawnFuzz)
-        {
-            chunkcoordinates.posX += this.worldObj.rand.nextInt(spawnFuzz) - spawnFuzzHalf;
-            chunkcoordinates.posZ += this.worldObj.rand.nextInt(spawnFuzz) - spawnFuzzHalf;
-            chunkcoordinates.posY = this.worldObj.getTopSolidOrLiquidBlock(chunkcoordinates.posX, chunkcoordinates.posZ);
-        }
-
-        return chunkcoordinates;
-    }
 }
