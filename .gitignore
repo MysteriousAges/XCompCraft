@@ -2,26 +2,26 @@
 *.iml
 *.ipr
 *.iws
-out/
-.idea/
+/out
+/.idea
 
 # Eclipse Project Files
 .classpath
 .project
-.settings/
-eclipse/
+/.settings
+/eclipse
 
 # Gradle
-.gradle
-gradle/
-build/
-debug/
-bin/
-config/
-crash-reports/
-logs/
-mods/
-saves/
-usernamecache.json
-options.txt
-asm
+/.gradle
+/gradle
+/build
+/debug
+/bin
+/crash-reports
+/logs
+/mods
+/saves
+/usernamecache.json
+/options.txt
+/asm
+/config
