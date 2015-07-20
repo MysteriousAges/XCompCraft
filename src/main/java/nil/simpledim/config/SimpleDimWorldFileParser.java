@@ -44,11 +44,19 @@ public class SimpleDimWorldFileParser {
 	public List<DimensionInfo> parseDimensionFile(File file) {
 		List<DimensionInfo> fileDimensions = new ArrayList<DimensionInfo>();
 		try {
+			DimensionInfo info;
 			pattern = Pattern.compile(theRegex);
 			String contents = FileUtils.readFileToString(file);
 			Matcher matcher = pattern.matcher(contents);
 			while (matcher.find()) {
-				fileDimensions.add(getDimensionInfoFromMatcher(matcher));
+				info = getDimensionInfoFromMatcher(matcher);
+				if (info.validateConfiguration()) {
+					fileDimensions.add(info);
+					LogHelper.info("Found configuration for " + info.name + " with ID " + info.dimensionId);
+				}
+				else {
+					LogHelper.error("Configuration for " + info.name + " is invalid, and will be ignored!");
+				}
 			}
 			
 		} catch (IOException e) {

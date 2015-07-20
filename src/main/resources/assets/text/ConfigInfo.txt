@@ -38,7 +38,7 @@ Other types of parameters are used in conjunction with specific types of dimensi
 	
 	spawn: Used to set the spawn location of the dimension.
 			Set of 3 comma separated integers. Enclosing with parentheses is recommended, but not
-			strictly required.
+			strictly required. (x, y, z) where y cannot be negative. (Don't spawn under the world!)
 			Useable with all world types.
 	
 	biome: Used to set the biome of 'singleBiome' worlds, specified as the biome name without

@@ -2,6 +2,7 @@ package nil.simpledim;
 
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.DimensionManager;
+import nil.simpledim.config.Config;
 import nil.simpledim.item.TeleporterItem;
 import nil.simpledim.world.SimpleDimWorldProvider;
 import nil.simpledim.world.type.EmptyWorldType;

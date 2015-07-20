@@ -43,7 +43,7 @@ public class DimensionInfo {
 	}
 	
 	private boolean isValidDimensionId(int dimensionId) {
-		return dimensionId < -1 && 1 < dimensionId;
+		return dimensionId < -1 | 1 < dimensionId;
 	}
 	
 	@Override
