@@ -1,4 +1,7 @@
-package nil.simpledim;
+package nil.simpledim.util;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -9,8 +12,21 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class SimpleDimTeleporter extends Teleporter {
+	
+	private static Map<Integer, SimpleDimTeleporter> teleporterCache = new HashMap<Integer, SimpleDimTeleporter>();
+	
+	public static SimpleDimTeleporter forWorldServer(WorldServer worldServer) {
+		if (teleporterCache.containsKey(worldServer.provider.dimensionId)) {
+			return teleporterCache.get(worldServer.provider.dimensionId);
+		}
+		else {
+			SimpleDimTeleporter teleporter = new SimpleDimTeleporter(worldServer);
+			teleporterCache.put(worldServer.provider.dimensionId, teleporter);
+			return teleporter;
+		}
+	}
 
-    public SimpleDimTeleporter(WorldServer worldServer)
+    private SimpleDimTeleporter(WorldServer worldServer)
     {
     	super(worldServer);
     }

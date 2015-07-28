@@ -4,6 +4,10 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class DimensionInfo {
+	
+	public static final String NAME_END = "end";
+	public static final String NAME_NETHER = "nether";
+	public static final String NAME_OVERWORLD = "overworld";
 
 	public String name;
 	public int dimensionId;
@@ -25,7 +29,7 @@ public class DimensionInfo {
 		if (type == DimensionType.UNKNOWN) {
 			return false;
 		}
-		if (name == null || !isValidDimensionId(dimensionId)) {
+		if (!isNameValid(name) || !isValidDimensionId(dimensionId)) {
 			return false;
 		}
 		else if (type == DimensionType.SUPERFLAT) {
@@ -44,7 +48,17 @@ public class DimensionInfo {
 	}
 	
 	private boolean isValidDimensionId(int dimensionId) {
-		return dimensionId < -1 | 1 < dimensionId;
+		return dimensionId <= -1 || 1 <= dimensionId;
+	}
+	
+	private boolean isNameValid(String name) {
+		if (name == null || name.equalsIgnoreCase(NAME_OVERWORLD) 
+				|| name.equalsIgnoreCase(NAME_NETHER) || name.equalsIgnoreCase(NAME_END)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	@Override

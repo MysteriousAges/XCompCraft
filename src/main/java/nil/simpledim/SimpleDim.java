@@ -1,5 +1,6 @@
 package nil.simpledim;
 
+import nil.simpledim.command.EnhancedTeleportCommand;
 import nil.simpledim.config.Config;
 import nil.simpledim.item.TeleporterItem;
 import cpw.mods.fml.common.Mod;
@@ -12,6 +13,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod( modid = SimpleDim.NAME,
+		name = SimpleDim.NAME,
 		version = "@VERSION@" )
 public class SimpleDim {
 	public static final String NAME = "SimpleDim";
@@ -41,7 +43,7 @@ public class SimpleDim {
 	
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
-
+		event.registerServerCommand(new EnhancedTeleportCommand());
 	}
 	
 	@EventHandler

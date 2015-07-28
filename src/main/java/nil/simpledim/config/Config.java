@@ -15,6 +15,8 @@ import net.minecraftforge.common.config.Property;
 import nil.simpledim.LogHelper;
 import nil.simpledim.SimpleDim;
 import nil.simpledim.world.SimpleDimWorldProvider;
+import nil.simpledim.world.type.SingleBiomeWorldType;
+import nil.simpledim.world.type.VoidWorldType;
 
 import org.apache.commons.io.FileUtils;
 
@@ -23,15 +25,17 @@ public class Config {
 	public boolean dimensionSpawnIsLoaded;
 	
 	public static WorldType SINGLE_BIOME = new SingleBiomeWorldType();
-	public static WorldType VOID;
+	public static WorldType VOID = new VoidWorldType();
 	
 	public static String GENERAL = "General";
 	
 	private Configuration configuration;
 	private Map<Integer, DimensionInfo> dimensionProperties;
+	private Map<String, DimensionInfo> dimensionInfoByName;
 	
 	private Config() {
 		dimensionProperties = new HashMap<Integer, DimensionInfo>();
+		dimensionInfoByName = new HashMap<String, DimensionInfo>();
 	}
 
 	public static Config fromFile(File configFile) {
@@ -52,6 +56,10 @@ public class Config {
 	
 	public DimensionInfo getDimensionInfoForWorld(int dimId) {
 		return dimensionProperties.get(dimId);
+	}
+	
+	public DimensionInfo getDimensionInfoForWorld(String name) {
+		return dimensionInfoByName.get(name);
 	}
 
 	private void parseFile() {
@@ -74,14 +82,22 @@ public class Config {
 
 	private void registerDimensions(List<DimensionInfo> infoList) {
 		for (DimensionInfo info : infoList) {
-			if (!dimensionProperties.containsKey(info.dimensionId)) {
-				dimensionProperties.put(info.dimensionId, info);
-			}
-			else {
+			if (dimensionProperties.containsKey(info.dimensionId)) {
 				LogHelper.error("Dimension " + info.name + " is configured to use a dimension ID already taken by SimpleDim. Fix your configs!");
 				String message = String.format("Dimension %s failed to register dimension %d - already occupied by %d!",
 						info.name, info.dimensionId, dimensionProperties.get(info.dimensionId).name);
 				throw new DuplicateDimensionIdException(message);
+			}
+			else if (dimensionInfoByName.containsKey(info.name)) {
+				DimensionInfo otherDim = dimensionInfoByName.get(info.name);
+				LogHelper.error("Dimension" + info.dimensionId + " is configured to use a dimension name already specified in your configs. Please choose a unique name for either ID " + info.dimensionId + " or " + otherDim.dimensionId);
+				String message = String.format("Dimension Id %d failed to register with name %s - already used by dimension %d!",
+						info.dimensionId, info.name, otherDim.dimensionId);
+				throw new DuplicateDimensionIdException(message);
+			}
+			else {
+				dimensionProperties.put(info.dimensionId, info);
+				dimensionInfoByName.put(info.name, info);
 			}
 		}
 	}
@@ -134,4 +150,14 @@ public class Config {
 		}
 	}
 
+	public List<String> getAllDimensionNames() {
+		List<String> dimNames = new ArrayList<String>(dimensionProperties.size() + 3);
+		dimNames.add(DimensionInfo.NAME_OVERWORLD);
+		dimNames.add(DimensionInfo.NAME_NETHER);
+		dimNames.add(DimensionInfo.NAME_END);
+		for (DimensionInfo info : dimensionProperties.values()) {
+			dimNames.add(info.name);
+		}
+		return dimNames;
+	}
 }

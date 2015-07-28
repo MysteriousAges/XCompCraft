@@ -16,7 +16,7 @@ import nil.simpledim.LogHelper;
 public class SimpleDimWorldFileParser {
 	
 	/* The src Regex for easy copypasta & tweaking purporses.
-		(?<name>[A-z]+)\s*\{\s*
+		(?<name>[A-z]+[0-9A-z]*)\s*\{\s*
 		(?=[^{]*?id\s*:\s*(?<dimensionId>-?\d+)\s*)
 		(?=[^{]*?type\s*:\s*(?<type>[A-z]+))
 		(?:[^{]*?generator\s*:\s*['"](?<generator>.+)['"])?
@@ -27,7 +27,7 @@ public class SimpleDimWorldFileParser {
 		(?:[^{]*?loadSpawn\s*:\s*(?<loadSpawn>(?:true|false)))?
 		(?:[^{])*}
 	*/
-	private static String theRegex = "(?<name>[A-z]+)\\s*\\{\\s*"
+	private static String theRegex = "(?<name>[A-z]+[0-9A-z]*)\\s*\\{\\s*"
 				+ "(?=[^{]*?id\\s*:\\s*(?<dimensionId>-?\\d+)\\s*)"
 				+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
 				+ "(?:[^{]*?generator\\s*:\\s*['\"](?<generator>.+)['\"])?"

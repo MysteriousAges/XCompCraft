@@ -26,6 +26,7 @@ group= "warg"
 archivesBaseName = "simpledim"
 
 minecraft {
+	mappings = "stable_12"
     version = project.version_mc + "-" + project.version_forge
 	runDir = "."
 	
