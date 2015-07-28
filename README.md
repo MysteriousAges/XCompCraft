@@ -13,6 +13,20 @@ This might be the mod for you.
   * Void, fantastic for falling to your doom in!
 * Set spawn points via config file
 * Easily create new dimensions with an easy to write config style
+* Enhanced Teleport command with way too many options!
+ 
+## Enhanced Teleport
+Base command: /etp
+
+The following options are supported:
+/etp <target> - teleports user to target player's location.
+/etp <player> <target> - teleports player to target's location.
+/etp x y z - teleports user to specified coords.
+/etp <target> x y z - teleports target to specified coords.
+/etp x y z <dimension> - teleports user to specified coords in dimension.
+/etp <target> x y z <dimension> - teleports target to specified coords in dimension.
+
+The <dimension> parameter can either be the numeric ID assigned in the config, or the dimension name used to give the config entry for that dimension a name.
 
 # License & Distribution
 
