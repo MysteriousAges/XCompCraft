@@ -19,14 +19,14 @@ This might be the mod for you.
 Base command: /etp
 
 The following options are supported:
-/etp <target> - teleports user to target player's location.
-/etp <player> <target> - teleports player to target's location.
-/etp x y z - teleports user to specified coords.
-/etp <target> x y z - teleports target to specified coords.
-/etp x y z <dimension> - teleports user to specified coords in dimension.
-/etp <target> x y z <dimension> - teleports target to specified coords in dimension.
+* /etp &lt;target&gt; - teleports user to target player's location.
+* /etp &lt;player&gt; &lt;target&gt; - teleports player to target's location.
+* /etp x y z - teleports user to specified coords.
+* /etp &lt;target&gt; x y z - teleports target to specified coords.
+* /etp x y z &lt;dimension&gt; - teleports user to specified coords in dimension.
+* /etp &lt;target&gt; x y z &lt;dimension&gt; - teleports target to specified coords in dimension.
 
-The <dimension> parameter can either be the numeric ID assigned in the config, or the dimension name used to give the config entry for that dimension a name.
+The &lt;dimension&gt; parameter can either be the numeric ID assigned in the config, or the dimension name used to give the config entry for that dimension a name.
 
 # License & Distribution
 
