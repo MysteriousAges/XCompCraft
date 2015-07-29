@@ -41,6 +41,7 @@ jar {
         manifest {
         attributes 'FMLAT': 'simpleDimAccessTransformer.cfg'
     }
+    exclude('*.pdn')
 }
 
 processResources
