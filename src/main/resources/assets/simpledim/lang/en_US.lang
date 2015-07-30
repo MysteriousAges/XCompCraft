@@ -1,0 +1,1 @@
+commands.etp.usage=/etp <player> [<player>] OR /etp x y z [<dimension>] OR /etp <player> x y z [<dimension>]

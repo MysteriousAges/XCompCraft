@@ -32,10 +32,12 @@ public class Config {
 	private Configuration configuration;
 	private Map<Integer, DimensionInfo> dimensionProperties;
 	private Map<String, DimensionInfo> dimensionInfoByName;
+	private Map<String, TransportItemInfo> transportItemByName;
 	
 	private Config() {
 		dimensionProperties = new HashMap<Integer, DimensionInfo>();
 		dimensionInfoByName = new HashMap<String, DimensionInfo>();
+		transportItemByName = new HashMap<String, TransportItemInfo>();
 	}
 
 	public static Config fromFile(File configFile) {
@@ -76,48 +78,76 @@ public class Config {
 	private void processDimensionFiles(File path) {
 		String dimDirPath = path.getPath() + File.separatorChar + SimpleDim.NAME;
 		File dimDir = createConfigSubdirectoryIfNeeded(dimDirPath);
-		List<DimensionInfo> infoList = findAndParseAllConfigsInFolder(dimDir);
-		registerDimensions(infoList);
+		findAndParseAllConfigsInFolder(dimDir);
 	}
 
-	private void registerDimensions(List<DimensionInfo> infoList) {
-		for (DimensionInfo info : infoList) {
-			if (dimensionProperties.containsKey(info.dimensionId)) {
-				LogHelper.error("Dimension " + info.name + " is configured to use a dimension ID already taken by SimpleDim. Fix your configs!");
-				String message = String.format("Dimension %s failed to register dimension %d - already occupied by %d!",
-						info.name, info.dimensionId, dimensionProperties.get(info.dimensionId).name);
-				throw new DuplicateDimensionIdException(message);
-			}
-			else if (dimensionInfoByName.containsKey(info.name)) {
-				DimensionInfo otherDim = dimensionInfoByName.get(info.name);
-				LogHelper.error("Dimension" + info.dimensionId + " is configured to use a dimension name already specified in your configs. Please choose a unique name for either ID " + info.dimensionId + " or " + otherDim.dimensionId);
-				String message = String.format("Dimension Id %d failed to register with name %s - already used by dimension %d!",
-						info.dimensionId, info.name, otherDim.dimensionId);
-				throw new DuplicateDimensionIdException(message);
-			}
-			else {
-				dimensionProperties.put(info.dimensionId, info);
-				dimensionInfoByName.put(info.name, info);
-			}
+	private void registerDimensionInfo(DimensionInfo info) {
+		if (dimensionProperties.containsKey(info.dimensionId)) {
+			LogHelper.error("Dimension " + info.name + " is configured to use a dimension ID already taken by SimpleDim. Fix your configs!");
+			String message = String.format("Dimension %s failed to register dimension %d - already occupied by %d!",
+					info.name, info.dimensionId, dimensionProperties.get(info.dimensionId).name);
+			throw new DuplicateDimensionIdException(message);
+		}
+		else if (dimensionInfoByName.containsKey(info.name)) {
+			DimensionInfo otherDim = dimensionInfoByName.get(info.name);
+			LogHelper.error("Dimension" + info.dimensionId + " is configured to use a dimension name already specified in your configs. Please choose a unique name for either ID " + info.dimensionId + " or " + otherDim.dimensionId);
+			String message = String.format("Dimension Id %d failed to register with name %s - already used by dimension %d!",
+					info.dimensionId, info.name, otherDim.dimensionId);
+			throw new DuplicateDimensionIdException(message);
+		}
+		else {
+			dimensionProperties.put(info.dimensionId, info);
+			dimensionInfoByName.put(info.name, info);
+		}
+	}
+	
+	private void registerItemInfo(TransportItemInfo info) {
+		if (transportItemByName.containsKey(info.name)) {
+			LogHelper.error("Transport Item " + info.name + " already registered! Please choose a new name for the item for the dimension " + info.forDimension);
+			String message = String.format("Transport Item name %s is already used with dimension %s - please choose a new name for the item used with %s",
+					info.name, transportItemByName.get(info.name).forDimension, info.forDimension);
+			throw new DuplicateTransportItemNameException(message);
+		}
+		else {
+			transportItemByName.put(info.name, info);
 		}
 	}
 
-	private List<DimensionInfo> findAndParseAllConfigsInFolder(File dimDir) {
+	private void findAndParseAllConfigsInFolder(File dimDir) {
 		LogHelper.info("Searching for SimpleDim configuration files...");
-		List<DimensionInfo> dimInfoList = new ArrayList<DimensionInfo>();
+		int dimsFound = 0;
+		int itemsFound = 0;
 		SimpleDimWorldFileParser parser = new SimpleDimWorldFileParser();
 		
 		for (File file : dimDir.listFiles()) {
-			if (file.getName().endsWith("cfg")) {
+			if (file.getName().endsWith(".cfg")) {
 				LogHelper.info("Found " + file.getName());
-				List<DimensionInfo> newInfo = parser.parseDimensionFile(file);
-				dimInfoList.addAll(newInfo);
-				LogHelper.info("Finished parsing " + newInfo.size() + " dimensions from " + file.getName());
+				String fileContents;
+				try {
+					fileContents = FileUtils.readFileToString(file);
+					List<DimensionInfo> infoList = parser.parseDimensions(fileContents);
+					for (DimensionInfo dimInfo : infoList) {
+						++dimsFound;
+						registerDimensionInfo(dimInfo);
+					}
+					
+					List<TransportItemInfo> itemList = parser.parseTransportItems(fileContents);
+					for (TransportItemInfo itemInfo : itemList) {
+						++itemsFound;
+						registerItemInfo(itemInfo);
+					}
+					LogHelper.info("Finished parsing " + infoList.size() + " dimensions and " + itemList.size() + " items from " + file.getName());
+				} catch (IOException e) {
+					LogHelper.error("Encountered an error parsing " + file.getName());
+					e.printStackTrace();
+					LogHelper.error("Unable to parse file. Skipping.");
+				}
 			}
 		}
 		
-		LogHelper.info("Finished searching for SimpleDim configs. Found a total of " + dimInfoList.size() + " dimension entries.");
-		return dimInfoList;
+		LogHelper.info(
+				String.format("Finished searching for SimpleDim configs. Found a total of %d dimension entries and %d transport items.",
+				dimsFound, itemsFound));
 	}
 
 	private File createConfigSubdirectoryIfNeeded(String dimDirPath) {

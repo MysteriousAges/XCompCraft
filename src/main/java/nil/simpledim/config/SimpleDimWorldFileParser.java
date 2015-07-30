@@ -1,14 +1,9 @@
 package nil.simpledim.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import nil.simpledim.LogHelper;
@@ -23,54 +18,87 @@ public class SimpleDimWorldFileParser {
 		(?:[^{]*?spawn\s*:\s*\(?(?<spawnCoords>-?\d+\s*,\s*\d+\s*,\s*-?\d+\s*)\)?)?
 		(?:[^{]*?biome\s*:\s*(?<biome>[A-z]+))?
 		(?:[^{]*?biomeList\s*:\s*\[(?<biomeList>[A-z, ]+)])?
-		(?:[^{]*?seed\s*:\s*(?<seed>(?:0x\d+)|(?:-?\d+)))?
+		(?:[^{]*?seed\s*:\s*(?<seed>(?:0x[0-9abcdefABCDEF]+)|(?:-?\d+)))?
 		(?:[^{]*?loadSpawn\s*:\s*(?<loadSpawn>(?:true|false)))?
-		(?:[^{])*}
+		(?:[^{]*)}
 	*/
-	private static String theRegex = "(?<name>[A-z]+[0-9A-z]*)\\s*\\{\\s*"
+	private static final String dimensionConfigEntryPattern = "(?<name>[A-z]+[0-9A-z]*)\\s*\\{\\s*"
 				+ "(?=[^{]*?id\\s*:\\s*(?<dimensionId>-?\\d+)\\s*)"
 				+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
 				+ "(?:[^{]*?generator\\s*:\\s*['\"](?<generator>.+)['\"])?"
 				+ "(?:[^{]*?spawn\\s*:\\s*\\(?(?<spawnCoords>-?\\d+\\s*,\\s*\\d+\\s*,\\s*-?\\d+\\s*)\\)?)?"
 				+ "(?:[^{]*?biome\\s*:\\s*(?<biome>[A-z]+))?"
 				+ "(?:[^{]*?biomeList\\s*:\\s*\\[(?<biomeList>[A-z, ]+)])?"
-				+ "(?:[^{]*?seed\\s*:\\s*(?<seed>(?:0x\\d+)|(?:-?\\d+)))?"
+				+ "(?:[^{]*?seed\\s*:\\s*(?<seed>(?:0x[0-9abcdefABCDEF]+)|(?:-?\\d+)))?"
 				+ "(?:[^{]*?loadSpawn\\s*:\\s*(?<loadSpawn>(?:true|false)))?"
-				+ "(?:[^{])*?\\}";
-	private Pattern pattern;
+				+ "(?:[^{]*)\\}";
+	private Pattern dimensionPattern;
+	
+	/*
+		item (?<name>[A-z]+[0-9A-z]*?)\\s*{\\s*
+		(?=[^?]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))
+		(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))
+		(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colours>(?:(?:0x[0-9abcdefABCDEF]+|-?[0-9]+)(?:, )*)+)])?
+		(?:[^{]*?variant\\s*:\\s*\\[(?<variant>[0-9, ]+))?
+		(?:[^{]*?displayName\\s*"\\s*"(?<displayName[A-z0-9_\\- ]+)")?
+		(?:[^{]*)}
+	 */
+	private static final String teleporterConfigEntryPattern = "item (?<name>[A-z]+[0-9A-z_\\- ]*?)\\s*{\\s*"
+		+ "(?=[^?]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))"
+		+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
+		+ "(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colours>(?:(?:0x[0-9abcdefABCDEF]+|-?[0-9]+)(?:, )*)+)])?"
+		+ "(?:[^{]*?variant\\s*:\\s*\\[(?<variant>[0-9, ]+))?"
+		+ "(?:[^{]*?displayName\\s*:\\s*\"(?<displayName>[A-z0-9_\\- ]+)\")?"
+		+ "(?:[^{]*)}";
+	private Pattern itemPattern;
 	
 	public SimpleDimWorldFileParser() {
-		pattern = Pattern.compile(theRegex);
+		dimensionPattern = Pattern.compile(dimensionConfigEntryPattern);
+		itemPattern = Pattern.compile(teleporterConfigEntryPattern);				
 	}
 	
-	public List<DimensionInfo> parseDimensionFile(File file) {
-		List<DimensionInfo> fileDimensions = new ArrayList<DimensionInfo>();
-		try {
-			DimensionInfo info;
-			pattern = Pattern.compile(theRegex);
-			String contents = FileUtils.readFileToString(file);
-			Matcher matcher = pattern.matcher(contents);
-			while (matcher.find()) {
-				info = getDimensionInfoFromMatcher(matcher);
-				if (info.validateConfiguration()) {
-					fileDimensions.add(info);
-					LogHelper.info("Found configuration for " + info.name + " with ID " + info.dimensionId);
-				}
-				else {
-					LogHelper.error("Configuration for " + info.name + " is invalid, and will be ignored!");
-				}
+	public List<DimensionInfo> parseDimensions(String contents) {
+		List<DimensionInfo> foundDimensions = new LinkedList<DimensionInfo>();
+		DimensionInfo dimensionInfo;
+		Matcher dimensionMatcher = dimensionPattern.matcher(contents);
+		while (dimensionMatcher.find()) {
+			dimensionInfo = getDimensionInfoFromMatcher(dimensionMatcher);
+			if (dimensionInfo.validateConfiguration()) {
+				foundDimensions.add(dimensionInfo);
+				LogHelper.info("Found configuration for " + dimensionInfo.name + " with ID " + dimensionInfo.dimensionId);
 			}
-			
-		} catch (IOException e) {
-			
-			e.printStackTrace();
+			else {
+				LogHelper.error("Configuration for " + dimensionInfo.name + " is invalid, and will be ignored!");
+			}
 		}
-		return fileDimensions;
+		return foundDimensions;
 	}
 	
 	public DimensionInfo getDimensionInfoForEntry(String dimensionDescription) {
-		Matcher matcher = pattern.matcher(dimensionDescription);
+		Matcher matcher = dimensionPattern.matcher(dimensionDescription);
 		return getDimensionInfoFromMatcher(matcher);
+	}
+	
+	public List<TransportItemInfo> parseTransportItems(String contents) {
+		List<TransportItemInfo> foundItems = new LinkedList<TransportItemInfo>();
+		TransportItemInfo itemInfo;
+		Matcher itemMatcher = itemPattern.matcher(contents);
+		while (itemMatcher.find()) {
+			itemInfo = getTransportItemInfoFromMatcher(itemMatcher);
+			if (itemInfo.validateConfiguration()) {
+				foundItems.add(itemInfo);
+				LogHelper.info("Found item configuration for " + itemInfo.name + " for dimension " + itemInfo.forDimension);
+			}
+			else {
+				LogHelper.error("Configuration for " + itemInfo.name + " is invalid, and will be ignored!");
+			}
+		}
+		return foundItems;
+	}
+	
+	public TransportItemInfo getTransportItemInfoForEntry(String dimensionDescription) {
+		Matcher matcher = itemPattern.matcher(dimensionDescription);
+		return getTransportItemInfoFromMatcher(matcher);
 	}
 
 	private DimensionInfo getDimensionInfoFromMatcher(Matcher matcher) {
@@ -81,7 +109,12 @@ public class SimpleDimWorldFileParser {
 		
 		String tmp = matcher.group("seed");
 		if (tmp != null && !tmp.isEmpty()) {
-			info.seedOverride = Integer.parseInt(tmp);
+			if (tmp.startsWith("0x")) {
+				info.seedOverride = Long.parseLong(tmp, 16);
+			}
+			else {
+				info.seedOverride = Long.parseLong(tmp);
+			}
 		}
 		
 		tmp = matcher.group("generator");
@@ -102,6 +135,30 @@ public class SimpleDimWorldFileParser {
 		tmp = matcher.group("loadSpawn");
 		if (tmp != null && !tmp.isEmpty()) {
 			info.loadSpawn = Boolean.parseBoolean(tmp);
+		}
+		
+		return info;
+	}
+	
+	private TransportItemInfo getTransportItemInfoFromMatcher(Matcher matcher) {
+		TransportItemInfo info = new TransportItemInfo();
+		info.type = TransportItemType.fromString(matcher.group("type"));
+		info.name = matcher.group("name");
+		info.forDimension = matcher.group("forDimension");
+		
+		String tmp = matcher.group("colour");
+		if (tmp != null && !tmp.isEmpty()) {
+			info.variantInfo = parseVariantInfoFromString(tmp);
+		}
+		
+		tmp = matcher.group("colours");
+		if (tmp != null && !tmp.isEmpty()) {
+			info.layerColours = parseLayerColoursFromString(tmp);
+		}
+		
+		tmp = matcher.group("displayName");
+		if (tmp != null && !tmp.isEmpty()) {
+			info.displayName = tmp;
 		}
 		
 		return info;
@@ -133,5 +190,27 @@ public class SimpleDimWorldFileParser {
 		}
 
 		return biomeList.toArray(new BiomeGenBase[biomeList.size()]);
+	}
+
+	private byte[] parseVariantInfoFromString(String tmp) {
+		String[] variantInfo = tmp.split("\\s*,\\s*");
+		byte[] variants = new byte[variantInfo.length];
+		
+		for (int index = 0; index < variants.length; ++index) {
+			variants[index] = Byte.parseByte(variantInfo[index]);
+		}
+		
+		return variants;
+	}
+
+	private int[] parseLayerColoursFromString(String tmp) {
+		String[] colourData = tmp.split("\\s*,\\s*");
+		int[] colours = new int[colourData.length];
+		
+		for (int index = 0; index < colours.length; ++index) {
+			colours[index] = Integer.parseInt(colourData[index]);
+		}
+		
+		return colours;
 	}
 }

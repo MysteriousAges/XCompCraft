@@ -12,7 +12,7 @@ public class DimensionInfo {
 	public String name;
 	public int dimensionId;
 	public DimensionType type;
-	public Integer seedOverride;
+	public Long seedOverride;
 	public ChunkCoordinates spawnPoint;
 	public String superflatGenerator;
 	public BiomeGenBase biome;
