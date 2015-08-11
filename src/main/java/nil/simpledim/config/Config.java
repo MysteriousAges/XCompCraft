@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,5 +190,9 @@ public class Config {
 			dimNames.add(info.name);
 		}
 		return dimNames;
+	}
+	
+	public List<TransportItemInfo> getAllTransportItemInfo() {
+		return Collections.unmodifiableList(new ArrayList<TransportItemInfo>(transportItemByName.values()));
 	}
 }

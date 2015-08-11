@@ -29,27 +29,27 @@ public class SimpleDimWorldFileParser {
 				+ "(?:[^{]*?spawn\\s*:\\s*\\(?(?<spawnCoords>-?\\d+\\s*,\\s*\\d+\\s*,\\s*-?\\d+\\s*)\\)?)?"
 				+ "(?:[^{]*?biome\\s*:\\s*(?<biome>[A-z]+))?"
 				+ "(?:[^{]*?biomeList\\s*:\\s*\\[(?<biomeList>[A-z, ]+)])?"
-				+ "(?:[^{]*?seed\\s*:\\s*(?<seed>(?:0x[0-9abcdefABCDEF]+)|(?:-?\\d+)))?"
+				+ "(?:[^{]*?seed\\s*:\\s*(?<seed>(?:0x[0-9a-fA-F]+)|(?:-?\\d+)))?"
 				+ "(?:[^{]*?loadSpawn\\s*:\\s*(?<loadSpawn>(?:true|false)))?"
 				+ "(?:[^{]*)\\}";
 	private Pattern dimensionPattern;
 	
 	/*
-		item (?<name>[A-z]+[0-9A-z]*?)\\s*{\\s*
+		item (?<name>[A-z]+[0-9A-z]*?)\\s*\\{\\s*
 		(?=[^?]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))
 		(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))
-		(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colours>(?:(?:0x[0-9abcdefABCDEF]+|-?[0-9]+)(?:, )*)+)])?
+		(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colours>(?:(?:0x[0-9a-fA-F]+|-?[0-9]+)(?:, )*)+)])?
 		(?:[^{]*?variant\\s*:\\s*\\[(?<variant>[0-9, ]+))?
 		(?:[^{]*?displayName\\s*"\\s*"(?<displayName[A-z0-9_\\- ]+)")?
 		(?:[^{]*)}
 	 */
-	private static final String teleporterConfigEntryPattern = "item (?<name>[A-z]+[0-9A-z_\\- ]*?)\\s*{\\s*"
-		+ "(?=[^?]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))"
+	private static final String teleporterConfigEntryPattern = "item (?<name>[A-z]+[0-9A-z_\\- ]*?)\\s*\\{\\s*"
+		+ "(?=[^{]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))"
 		+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
-		+ "(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colours>(?:(?:0x[0-9abcdefABCDEF]+|-?[0-9]+)(?:, )*)+)])?"
+		+ "(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colour>(?:(?:0x[0-9a-f-F]+|-?[0-9]+)(?:, )*)+)])?"
 		+ "(?:[^{]*?variant\\s*:\\s*\\[(?<variant>[0-9, ]+))?"
 		+ "(?:[^{]*?displayName\\s*:\\s*\"(?<displayName>[A-z0-9_\\- ]+)\")?"
-		+ "(?:[^{]*)}";
+		+ "(?:[^{]*)\\}";
 	private Pattern itemPattern;
 	
 	public SimpleDimWorldFileParser() {
@@ -109,11 +109,11 @@ public class SimpleDimWorldFileParser {
 		
 		String tmp = matcher.group("seed");
 		if (tmp != null && !tmp.isEmpty()) {
-			if (tmp.startsWith("0x")) {
-				info.seedOverride = Long.parseLong(tmp, 16);
+			try {
+				info.seedOverride = Long.decode(tmp).longValue();
 			}
-			else {
-				info.seedOverride = Long.parseLong(tmp);
+			catch (NumberFormatException e) {
+				info.seedOverride = (long)tmp.hashCode();
 			}
 		}
 		
@@ -146,12 +146,12 @@ public class SimpleDimWorldFileParser {
 		info.name = matcher.group("name");
 		info.forDimension = matcher.group("forDimension");
 		
-		String tmp = matcher.group("colour");
+		String tmp = matcher.group("variant");
 		if (tmp != null && !tmp.isEmpty()) {
 			info.variantInfo = parseVariantInfoFromString(tmp);
 		}
 		
-		tmp = matcher.group("colours");
+		tmp = matcher.group("colour");
 		if (tmp != null && !tmp.isEmpty()) {
 			info.layerColours = parseLayerColoursFromString(tmp);
 		}
@@ -208,7 +208,7 @@ public class SimpleDimWorldFileParser {
 		int[] colours = new int[colourData.length];
 		
 		for (int index = 0; index < colours.length; ++index) {
-			colours[index] = Integer.parseInt(colourData[index]);
+			colours[index] = Integer.decode(colourData[index]).intValue();
 		}
 		
 		return colours;

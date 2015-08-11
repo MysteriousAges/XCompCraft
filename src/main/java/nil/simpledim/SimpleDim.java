@@ -3,6 +3,7 @@ package nil.simpledim;
 import nil.simpledim.command.EnhancedTeleportCommand;
 import nil.simpledim.config.Config;
 import nil.simpledim.item.TeleporterItem;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -20,6 +21,8 @@ public class SimpleDim {
 	
 	@Instance(NAME)
 	public static SimpleDim modRef;
+	private EventListener eventListener;
+	public NetworkHandler networkHandler;
 	
 	public Config config;
 	public TeleporterItem teleporterItem;
@@ -39,6 +42,9 @@ public class SimpleDim {
 	
 	@EventHandler
 	public void postInit(FMLInitializationEvent event) {
+		eventListener = new EventListener();
+		FMLCommonHandler.instance().bus().register(eventListener);
+		networkHandler = NetworkHandler.createNetworkHandler();
 	}
 	
 	@EventHandler
