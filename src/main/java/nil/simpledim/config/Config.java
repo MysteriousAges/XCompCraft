@@ -9,17 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import nil.simpledim.LogHelper;
 import nil.simpledim.SimpleDim;
+import nil.simpledim.util.DuplicateTransportItemNameException;
 import nil.simpledim.world.SimpleDimWorldProvider;
 import nil.simpledim.world.type.SingleBiomeWorldType;
 import nil.simpledim.world.type.VoidWorldType;
 
 import org.apache.commons.io.FileUtils;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Config {
 	
@@ -31,24 +35,26 @@ public class Config {
 	public static String GENERAL = "General";
 	
 	private Configuration configuration;
+	private File configFileRoot;
 	private Map<Integer, DimensionInfo> dimensionProperties;
 	private Map<String, DimensionInfo> dimensionInfoByName;
 	private Map<String, TransportItemInfo> transportItemByName;
+	private List<ItemStack> transportItemStacks;
 	
 	private Config() {
 		dimensionProperties = new HashMap<Integer, DimensionInfo>();
 		dimensionInfoByName = new HashMap<String, DimensionInfo>();
 		transportItemByName = new HashMap<String, TransportItemInfo>();
+		transportItemStacks = new ArrayList<ItemStack>();
 	}
 
 	public static Config fromFile(File configFile) {
 		Config config = new Config();
+		config.configFileRoot = configFile;
 		
 		config.configuration = new Configuration(configFile);
 		config.configuration.load();
 		config.parseFile();
-		
-		config.processDimensionFiles(configFile.getParentFile());
 		
 		return config;
 	}
@@ -76,8 +82,8 @@ public class Config {
 		}
 	}	
 	
-	private void processDimensionFiles(File path) {
-		String dimDirPath = path.getPath() + File.separatorChar + SimpleDim.NAME;
+	public void processDimensionFiles() {
+		String dimDirPath = configFileRoot.getParent() + File.separatorChar + SimpleDim.NAME;
 		File dimDir = createConfigSubdirectoryIfNeeded(dimDirPath);
 		findAndParseAllConfigsInFolder(dimDir);
 	}
@@ -111,6 +117,10 @@ public class Config {
 		}
 		else {
 			transportItemByName.put(info.name, info);
+			ItemStack stack = new ItemStack(SimpleDim.modRef.teleporterItem);
+			stack.setTagCompound(info.getItemNBTIdentifier());
+			transportItemStacks.add(stack);
+			GameRegistry.registerCustomItemStack(info.name, stack);
 		}
 	}
 
@@ -194,5 +204,13 @@ public class Config {
 	
 	public List<TransportItemInfo> getAllTransportItemInfo() {
 		return Collections.unmodifiableList(new ArrayList<TransportItemInfo>(transportItemByName.values()));
+	}
+
+	public List<ItemStack> getAllTransportItemStacks() {
+		return Collections.unmodifiableList(transportItemStacks);
+	}
+
+	public TransportItemInfo getTransportItemInfoForName(String name) {
+		return transportItemByName.get(name);
 	}
 }

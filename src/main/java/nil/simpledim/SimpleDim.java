@@ -30,9 +30,12 @@ public class SimpleDim {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = Config.fromFile(event.getSuggestedConfigurationFile());
-		config.registerDimenions();
 		
 		teleporterItem = new TeleporterItem();
+
+		config.processDimensionFiles();
+		config.registerDimenions();
+		
 		GameRegistry.registerItem(teleporterItem, "teleporterItem");
 	}
 	

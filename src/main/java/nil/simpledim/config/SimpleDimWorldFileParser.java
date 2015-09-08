@@ -147,9 +147,12 @@ public class SimpleDimWorldFileParser {
 		info.forDimension = matcher.group("forDimension");
 		
 		String tmp = matcher.group("variant");
+		byte[] rawVariantData = null;
 		if (tmp != null && !tmp.isEmpty()) {
-			info.variantInfo = parseVariantInfoFromString(tmp);
+			rawVariantData = parseVariantInfoFromString(tmp);
 		}
+		info.variantInfo = new byte[info.type.layerVariants.length];
+		info.type.populateDefaultVariants(info.variantInfo, rawVariantData);
 		
 		tmp = matcher.group("colour");
 		if (tmp != null && !tmp.isEmpty()) {
@@ -159,6 +162,9 @@ public class SimpleDimWorldFileParser {
 		tmp = matcher.group("displayName");
 		if (tmp != null && !tmp.isEmpty()) {
 			info.displayName = tmp;
+		}
+		else {
+			info.displayName = info.name;
 		}
 		
 		return info;

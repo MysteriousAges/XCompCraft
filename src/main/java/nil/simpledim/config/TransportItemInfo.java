@@ -1,7 +1,11 @@
 package nil.simpledim.config;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import nil.simpledim.SimpleDim;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TransportItemInfo {
 
@@ -11,6 +15,7 @@ public class TransportItemInfo {
 	private static final String TAG_ICON_TYPE = "type";
 	private static final String TAG_VARIANT_INFO = "variant";
 	private static final String TAG_LAYER_COLOURS = "layerColours";
+	private static final String TAG_ITEM_IDENTIFIER = "tii_name";
 	
 	public String name;
 	public String forDimension;
@@ -30,7 +35,7 @@ public class TransportItemInfo {
 		if (name == null) {
 			return false;
 		}
-		if (variantInfo.length != type.getNumberLayers() || (0 < layerColours.length && layerColours.length < type.getNumberLayers())) {
+		if (variantInfo.length != type.getNumberLayers() || !(0 < layerColours.length && layerColours.length <= type.getNumberLayers())) {
 			return false;
 		}
 		for (int index = 0; index < variantInfo.length; ++index) {
@@ -40,19 +45,9 @@ public class TransportItemInfo {
 		}
 		if (SimpleDim.getConfig().getDimensionInfoForWorld(forDimension) == null) {
 			return false;
-		}		
-
-		return true;
-	}
-	
-	public String[] getLayerIconNames() {
-		String[] names = new String[type.getNumberLayers()];
-		
-		for (byte index = 0; index < names.length; ++index) {
-			names[index] = type.baseName + "-" + index + ((type.getNumberLayerVariants(index) > 1) ? ("-" + variantInfo[index]) : "");
 		}
 		
-		return names;
+		return true;
 	}
 	
 	public void setColourForLayer(byte layer, int colour) {
@@ -66,6 +61,10 @@ public class TransportItemInfo {
 		}
 	}
 	
+	/**
+	 * Used for syncronizing TransportItemInfo across the network.
+	 * @return
+	 */
 	public NBTTagCompound createNBTDescription() {
 		NBTTagCompound tag = new NBTTagCompound();
 		
@@ -86,6 +85,11 @@ public class TransportItemInfo {
 		return tag;
 	}
 	
+	/**
+	 * Used for synchronizing TransportItemInfo across the network.
+	 * @param tag
+	 * @return
+	 */
 	public static TransportItemInfo createFromNBT(NBTTagCompound tag) {
 		TransportItemInfo info = new TransportItemInfo();
 		
@@ -101,5 +105,37 @@ public class TransportItemInfo {
 		}
 		
 		return info;
+	}
+	
+	public static TransportItemInfo getFromItemStack(ItemStack itemStack) {
+		NBTTagCompound tag = itemStack.getTagCompound();
+		return getForItemname(tag.getString(TAG_ITEM_IDENTIFIER));
+	}
+	
+	public static TransportItemInfo getForItemname(String name) {
+		return SimpleDim.getConfig().getTransportItemInfoForName(name);
+	}
+	
+	public NBTTagCompound getItemNBTIdentifier() {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString(TAG_ITEM_IDENTIFIER, name);
+		return tag;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IIcon getIconForPass(int renderPass) {
+		return type.getLayerIcon(renderPass, (renderPass < variantInfo.length) ? variantInfo[renderPass] : 0);
+	}
+
+	public int getColourForLayer(int renderPass) {
+		if (layerColours != null) {
+			if (renderPass < layerColours.length) {
+				return layerColours[renderPass];
+			}
+			else {
+				return layerColours[layerColours.length - 1];
+			}
+		}
+		return 0xFFFFFF;
 	}
 }
