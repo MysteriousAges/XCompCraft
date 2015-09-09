@@ -179,7 +179,7 @@ public class Config {
 	}
 
 	private void copyDimInfoToDisk(File dimReadme) {
-		URL source = SimpleDim.class.getResource("/assets/text/ConfigInfo.txt");
+		URL source = SimpleDim.class.getResource("/assets/xcompcraft/text/ConfigInfo.txt");
 		try {
 			FileUtils.copyURLToFile(source, dimReadme);
 		} catch (IOException e) {
