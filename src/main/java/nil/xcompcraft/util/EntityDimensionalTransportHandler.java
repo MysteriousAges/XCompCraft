@@ -1,4 +1,4 @@
-package nil.simpledim.util;
+package nil.xcompcraft.util;
 
 import java.util.Collection;
 

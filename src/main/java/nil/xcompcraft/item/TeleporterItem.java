@@ -1,4 +1,4 @@
-package nil.simpledim.item;
+package nil.xcompcraft.item;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import nil.simpledim.SimpleDim;
-import nil.simpledim.config.DimensionInfo;
-import nil.simpledim.config.TransportItemInfo;
-import nil.simpledim.config.TransportItemType;
-import nil.simpledim.util.EntityDimensionalTransportHandler;
-import nil.simpledim.util.InvalidTeleporterItemStackException;
+import nil.xcompcraft.SimpleDim;
+import nil.xcompcraft.config.DimensionInfo;
+import nil.xcompcraft.config.TransportItemInfo;
+import nil.xcompcraft.config.TransportItemType;
+import nil.xcompcraft.util.EntityDimensionalTransportHandler;
+import nil.xcompcraft.util.InvalidTeleporterItemStackException;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

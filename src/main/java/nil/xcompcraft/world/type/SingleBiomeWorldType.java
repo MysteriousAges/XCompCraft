@@ -1,9 +1,9 @@
-package nil.simpledim.world.type;
+package nil.xcompcraft.world.type;
 
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
-import nil.simpledim.world.SingleBiomeWorldChunkManager;
+import nil.xcompcraft.world.SingleBiomeWorldChunkManager;
 
 public class SingleBiomeWorldType extends WorldType {
 

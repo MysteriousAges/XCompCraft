@@ -1,9 +1,9 @@
-package nil.simpledim.config;
+package nil.xcompcraft.config;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import nil.simpledim.SimpleDim;
+import nil.xcompcraft.SimpleDim;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -1,9 +1,9 @@
-package nil.simpledim.world;
+package nil.xcompcraft.world;
 
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
-import nil.simpledim.SimpleDim;
-import nil.simpledim.config.DimensionInfo;
+import nil.xcompcraft.SimpleDim;
+import nil.xcompcraft.config.DimensionInfo;
 
 public class SimpleDimWorldProvider extends WorldProvider {
 

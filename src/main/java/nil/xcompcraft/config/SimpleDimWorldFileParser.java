@@ -1,4 +1,4 @@
-package nil.simpledim.config;
+package nil.xcompcraft.config;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.world.biome.BiomeGenBase;
-import nil.simpledim.LogHelper;
+import nil.xcompcraft.LogHelper;
 
 public class SimpleDimWorldFileParser {
 

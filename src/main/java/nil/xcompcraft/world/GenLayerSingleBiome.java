@@ -1,4 +1,4 @@
-package nil.simpledim.world;
+package nil.xcompcraft.world;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.layer.GenLayer;

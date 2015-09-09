@@ -1,4 +1,4 @@
-package nil.simpledim.config;
+package nil.xcompcraft.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +14,12 @@ import net.minecraft.world.WorldType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import nil.simpledim.LogHelper;
-import nil.simpledim.SimpleDim;
-import nil.simpledim.util.DuplicateTransportItemNameException;
-import nil.simpledim.world.SimpleDimWorldProvider;
-import nil.simpledim.world.type.SingleBiomeWorldType;
-import nil.simpledim.world.type.VoidWorldType;
+import nil.xcompcraft.LogHelper;
+import nil.xcompcraft.SimpleDim;
+import nil.xcompcraft.util.DuplicateTransportItemNameException;
+import nil.xcompcraft.world.SimpleDimWorldProvider;
+import nil.xcompcraft.world.type.SingleBiomeWorldType;
+import nil.xcompcraft.world.type.VoidWorldType;
 
 import org.apache.commons.io.FileUtils;
 

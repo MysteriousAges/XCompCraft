@@ -1,4 +1,4 @@
-package nil.simpledim.command;
+package nil.xcompcraft.command;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import nil.simpledim.SimpleDim;
-import nil.simpledim.util.EntityDimensionalTransportHandler;
+import nil.xcompcraft.SimpleDim;
+import nil.xcompcraft.util.EntityDimensionalTransportHandler;
 
 public class EnhancedTeleportCommand extends CommandBase {
 

@@ -1,8 +1,8 @@
-package nil.simpledim;
+package nil.xcompcraft;
 
-import nil.simpledim.command.EnhancedTeleportCommand;
-import nil.simpledim.config.Config;
-import nil.simpledim.item.TeleporterItem;
+import nil.xcompcraft.command.EnhancedTeleportCommand;
+import nil.xcompcraft.config.Config;
+import nil.xcompcraft.item.TeleporterItem;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -17,7 +17,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 		name = SimpleDim.NAME,
 		version = "@VERSION@" )
 public class SimpleDim {
-	public static final String NAME = "SimpleDim";
+	public static final String NAME = "XCompCraft";
 	
 	@Instance(NAME)
 	public static SimpleDim modRef;

@@ -1,4 +1,4 @@
-package nil.simpledim;
+package nil.xcompcraft;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.FMLCommonHandler;

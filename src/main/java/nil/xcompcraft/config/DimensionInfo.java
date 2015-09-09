@@ -1,4 +1,4 @@
-package nil.simpledim.config;
+package nil.xcompcraft.config;
 
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;

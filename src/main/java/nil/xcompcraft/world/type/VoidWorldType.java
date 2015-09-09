@@ -1,11 +1,11 @@
-package nil.simpledim.world.type;
+package nil.xcompcraft.world.type;
 
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
-import nil.simpledim.config.DimensionInfo;
-import nil.simpledim.world.SimpleDimWorldProvider;
+import nil.xcompcraft.config.DimensionInfo;
+import nil.xcompcraft.world.SimpleDimWorldProvider;
 
 public class VoidWorldType extends WorldType {
 
