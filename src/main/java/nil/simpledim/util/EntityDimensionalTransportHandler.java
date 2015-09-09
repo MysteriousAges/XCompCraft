@@ -2,13 +2,17 @@ package nil.simpledim.util;
 
 import java.util.Collection;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class EntityDimensionalTransportHandler {
@@ -40,5 +44,56 @@ public class EntityDimensionalTransportHandler {
 		player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
 		FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, originWorld.provider.dimensionId, targetWorld.provider.dimensionId);
 	}
-	
+
+	public static void teleportPlayerToCoordsSafe(EntityPlayerMP player, WorldServer targetWorld, ChunkCoordinates position) {
+		position = getFinalSpawnCoords(targetWorld, position);
+		teleportPlayerToCoords(player, targetWorld, position.posX, position.posY, position.posZ);
+	}
+
+    // Gets the final spawn location, adjusting for terrain.
+    public static ChunkCoordinates getFinalSpawnCoords(WorldServer worldServer, ChunkCoordinates position) {
+    	if (isBlocksSuitableForSpawn(worldServer, position.posX, position.posY, position.posZ)) {
+    		return position;
+    	}
+    	
+    	int downwardOffset = Integer.MAX_VALUE;
+    	for (int i = position.posY - 1; i >= 0; --i) {
+    		if (isBlocksSuitableForSpawn(worldServer, position.posX, i, position.posZ)) {
+    			downwardOffset = position.posY - (position.posY - i);
+    			break;
+    		}
+    	}
+    	
+    	int upwardOffset = Integer.MAX_VALUE;
+    	for (int i = position.posY + 1; i < 255; ++i) {
+    		if (isBlocksSuitableForSpawn(worldServer, position.posX, i, position.posZ)) {
+    			upwardOffset = i - position.posY;
+    			break;
+    		}
+    	}
+    	
+    	if (downwardOffset < upwardOffset) {
+    		position.posY -= downwardOffset;
+    	}
+    	else if (upwardOffset < downwardOffset) {
+    		position.posY += upwardOffset;
+    	}
+    	else if (upwardOffset == Integer.MAX_VALUE && downwardOffset == Integer.MAX_VALUE)  {
+    		// Fuuuuuuuuuuuuuuuck it.
+    		worldServer.setBlock(position.posX, position.posY - 1, position.posZ, Blocks.stone);
+    		worldServer.setBlock(position.posX, position.posY, position.posZ, Blocks.air);
+    		worldServer.setBlock(position.posX, position.posY + 1, position.posZ, Blocks.air);
+    	}
+    	
+		return position;
+	}
+    
+    public static boolean isBlocksSuitableForSpawn(WorldServer worldServer, int x, int y, int z) {
+    	Block[] blockCache = new Block[3];
+    	blockCache[0] = worldServer.getBlock(x, y - 1, z);
+    	blockCache[1] = worldServer.getBlock(x, y, z);
+    	blockCache[2] = worldServer.getBlock(x, y + 1, z);
+    	
+    	return blockCache[0].isSideSolid(worldServer, x, y - 1, z, ForgeDirection.UP) && blockCache[1].isPassable(worldServer, x, y, z) && blockCache[2].isPassable(worldServer, x, y + 1, z);
+    }
 }

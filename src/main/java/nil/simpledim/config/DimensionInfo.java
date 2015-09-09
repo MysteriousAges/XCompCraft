@@ -1,7 +1,9 @@
 package nil.simpledim.config;
 
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.DimensionManager;
 
 public class DimensionInfo {
 	
@@ -64,5 +66,9 @@ public class DimensionInfo {
 	@Override
 	public String toString() {
 		return String.format("Dimension '%s' dimId: %d is type %s", name, dimensionId, type.name());
+	}
+	
+	public WorldServer getWorldServer() {
+		return DimensionManager.getWorld(dimensionId);
 	}
 }
