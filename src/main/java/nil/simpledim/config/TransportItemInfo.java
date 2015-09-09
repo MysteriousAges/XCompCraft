@@ -23,9 +23,11 @@ public class TransportItemInfo {
 	public TransportItemType type;
 	public byte[] variantInfo;
 	public int[] layerColours;
+	public int useTime;
 	
 	public TransportItemInfo() {
 		type = TransportItemType.UNKNOWN;
+		useTime = SimpleDim.getConfig().defaultItemUseLength;
 	}
 	
 	public boolean validateConfiguration() {

@@ -67,7 +67,7 @@ public class TeleporterItem extends Item {
 	@Override
 	public int getMaxItemUseDuration(ItemStack itemStack) {
 		TransportItemInfo info = TransportItemInfo.getFromItemStack(itemStack);
-		return 10;
+		return info.useTime;
 	}
 
 	@Override

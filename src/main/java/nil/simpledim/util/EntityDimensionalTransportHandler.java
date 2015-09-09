@@ -59,7 +59,7 @@ public class EntityDimensionalTransportHandler {
     	int downwardOffset = Integer.MAX_VALUE;
     	for (int i = position.posY - 1; i >= 0; --i) {
     		if (isBlocksSuitableForSpawn(worldServer, position.posX, i, position.posZ)) {
-    			downwardOffset = position.posY - (position.posY - i);
+    			downwardOffset = position.posY - i;
     			break;
     		}
     	}

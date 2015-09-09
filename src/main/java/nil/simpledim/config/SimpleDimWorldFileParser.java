@@ -9,19 +9,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import nil.simpledim.LogHelper;
 
 public class SimpleDimWorldFileParser {
-	
-	/* The src Regex for easy copypasta & tweaking purporses.
-		(?<name>[A-z]+[0-9A-z]*)\s*\{\s*
-		(?=[^{]*?id\s*:\s*(?<dimensionId>-?\d+)\s*)
-		(?=[^{]*?type\s*:\s*(?<type>[A-z]+))
-		(?:[^{]*?generator\s*:\s*['"](?<generator>.+)['"])?
-		(?:[^{]*?spawn\s*:\s*\(?(?<spawnCoords>-?\d+\s*,\s*\d+\s*,\s*-?\d+\s*)\)?)?
-		(?:[^{]*?biome\s*:\s*(?<biome>[A-z]+))?
-		(?:[^{]*?biomeList\s*:\s*\[(?<biomeList>[A-z, ]+)])?
-		(?:[^{]*?seed\s*:\s*(?<seed>(?:0x[0-9abcdefABCDEF]+)|(?:-?\d+)))?
-		(?:[^{]*?loadSpawn\s*:\s*(?<loadSpawn>(?:true|false)))?
-		(?:[^{]*)}
-	*/
+
 	private static final String dimensionConfigEntryPattern = "(?<name>[A-z]+[0-9A-z]*)\\s*\\{\\s*"
 				+ "(?=[^{]*?id\\s*:\\s*(?<dimensionId>-?\\d+)\\s*)"
 				+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
@@ -34,22 +22,14 @@ public class SimpleDimWorldFileParser {
 				+ "(?:[^{]*)\\}";
 	private Pattern dimensionPattern;
 	
-	/*
-		item (?<name>[A-z]+[0-9A-z]*?)\\s*\\{\\s*
-		(?=[^?]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))
-		(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))
-		(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colours>(?:(?:0x[0-9a-fA-F]+|-?[0-9]+)(?:, )*)+)])?
-		(?:[^{]*?variant\\s*:\\s*\\[(?<variant>[0-9, ]+))?
-		(?:[^{]*?displayName\\s*"\\s*"(?<displayName[A-z0-9_\\- ]+)")?
-		(?:[^{]*)}
-	 */
 	private static final String teleporterConfigEntryPattern = "item (?<name>[A-z]+[0-9A-z_\\- ]*?)\\s*\\{\\s*"
-		+ "(?=[^{]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))"
-		+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
-		+ "(?:[^{]*?colou?rs\\s*:\\s*\\[(?<colour>(?:(?:0x[0-9a-f-F]+|-?[0-9]+)(?:, )*)+)])?"
-		+ "(?:[^{]*?variant\\s*:\\s*\\[(?<variant>[0-9, ]+))?"
-		+ "(?:[^{]*?displayName\\s*:\\s*\"(?<displayName>[A-z0-9_\\- ]+)\")?"
-		+ "(?:[^{]*)\\}";
+				+ "(?=[^{]*?forDim(?:ension)?\\s*:\\s*(?<forDimension>[A-z]+[A-z0-9]*))"
+				+ "(?=[^{]*?type\\s*:\\s*(?<type>[A-z]+))"
+				+ "(?:[^{]*?colou?rs?\\s*:\\s*\\[(?<colour>(?:(?:0x[0-9a-f-F]+|-?[0-9]+)(?:, )*)+)])?"
+				+ "(?:[^{]*?variants?\\s*:\\s*\\[(?<variant>[0-9, ]+))?"
+				+ "(?:[^{]*?displayName\\s*:\\s*\"(?<displayName>[A-z0-9_\\- ]+)\")?"
+				//+ "(?:[^{]*?useTime\\s*:\\s*(?<useTime>\\d+))?"
+				+ "(?:[^{]*)\\}";
 	private Pattern itemPattern;
 	
 	public SimpleDimWorldFileParser() {
@@ -166,6 +146,11 @@ public class SimpleDimWorldFileParser {
 		else {
 			info.displayName = info.name;
 		}
+		
+		/*tmp = matcher.group("useTime");
+		if (tmp != null && !tmp.isEmpty()) {
+			info.useTime = Integer.parseInt(tmp);
+		}*/
 		
 		return info;
 	}

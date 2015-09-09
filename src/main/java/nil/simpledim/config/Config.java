@@ -28,6 +28,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class Config {
 	
 	public boolean dimensionSpawnIsLoaded;
+	public int defaultItemUseLength;
 	
 	public static WorldType SINGLE_BIOME = new SingleBiomeWorldType();
 	public static WorldType VOID = new VoidWorldType();
@@ -76,6 +77,9 @@ public class Config {
 		
 		p = configuration.get(GENERAL, "keepDimensionSpawnLoaded", true);
 		dimensionSpawnIsLoaded = p.getBoolean();
+		
+		p = configuration.get(GENERAL, "defaultItemUseLength", 5);
+		defaultItemUseLength = p.getInt();
 		
 		if (configuration.hasChanged()) {
 			configuration.save();

@@ -61,7 +61,7 @@ Other types of parameters are used in conjunction with specific types of dimensi
 			Name of the biome.
 			Only applicable to 'singleBiome' type.
 
-Example Entries:
+Example Dimension Entries:
 
 customAge { id: 16; type: overworld; spawn: (12, 75, -153); seed: 15203824 }
 
@@ -74,3 +74,44 @@ justAVoid { id: -2; type: void }
 justGrassAndSlimes { id: 3; type: superflat; generator: "2;7,2x3,2;1;village" }
 
 	- Creates a dimension similar to the default Superflat setting.
+
+
+To transport between SimpleDim dimensions, you may specify items in the config file. Each transport
+item follows a similar entry as dimensions, in the format:
+
+	item The Item Name In-game { parameter: value; parameter: value }
+
+The text that follows the item keyword will be used as the display name of the item in-game, less
+the trailing space, and will also be registered in the Game Registry with the provided name. Item
+entries have two required parameters:
+
+	forDimension: text identifying the dimension the item is linked to. Must be one of the
+			dimensions defined in one of the SimpleDim config files.
+	
+	type: visual representation of the teleporter item. Must be one of the valid types in the
+			following table.
+			
+Item Types:
+Each type is listed with the number of layers, and any available variants.
+
+	accessCard - gives the appearance of a credit-card type item.
+			3 layers. variants: [1, 1, 1]
+	pocketwatch - gives the appearance of a pocket watch or locket item.
+			2 layers, variants: [1, 2]
+
+
+Optional parameters are:
+
+	colours: Add colour to the teleporter icon's layers. Takes a list of numbers corresponding to
+			values in RGB format, length should not exceed the number of layers in the type.
+			Of the format: [ number, number, number ]
+			Number may either be hexadecimal or base 10.
+			
+	variant: A list of numbers corresponding to available variants. If no variant is available
+			for the layer, use 0. Must be strictly less than the number of variants for a layer.
+			Of the format: [ number, number, number ]
+			Number must be base 10.
+			
+	displayName: If using MineTweaker or similar mods to add recipes for the teleport item, use
+			this parameter to override the display name of the item, and don't use spaces in the
+			string provided to the item definition.
