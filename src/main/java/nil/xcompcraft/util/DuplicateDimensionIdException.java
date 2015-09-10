@@ -1,4 +1,4 @@
-package nil.xcompcraft.config;
+package nil.xcompcraft.util;
 
 public class DuplicateDimensionIdException extends RuntimeException {
 	private static final long serialVersionUID = 5054027003603485015L;

@@ -57,7 +57,7 @@ public class EntityDimensionalTransportHandler {
     		return position;
     	}
     	else if (worldServer.getBlock(position.posX, position.posY, position.posZ) instanceof BlockBed) {
-    		ChunkCoordinates bedExitPos = BlockBed.getSafeExitLocation(worldServer, position.posX, position.posY, position.posZ, 0);
+    		ChunkCoordinates bedExitPos = BlockBed.func_149977_a(worldServer, position.posX, position.posY, position.posZ, 0);//.getSafeExitLocation(worldServer, position.posX, position.posY, position.posZ, 0);
     		bedExitPos.posY += 1;
     		return bedExitPos;
     	}

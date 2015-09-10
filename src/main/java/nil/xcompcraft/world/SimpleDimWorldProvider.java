@@ -4,6 +4,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
 import nil.xcompcraft.SimpleDim;
 import nil.xcompcraft.config.DimensionInfo;
+import nil.xcompcraft.config.DimensionType;
 
 public class SimpleDimWorldProvider extends WorldProvider {
 
@@ -46,6 +47,9 @@ public class SimpleDimWorldProvider extends WorldProvider {
 		terrainType = dimInfo.type.getWorldType();
 		if (dimInfo.seedOverride != null) {
 			worldObj.getWorldInfo().randomSeed = dimInfo.seedOverride.intValue();
+		}
+		if  (dimInfo.type == DimensionType.SUPERFLAT && dimInfo.superflatGenerator != null) {
+			worldObj.getWorldInfo().generatorOptions = dimInfo.superflatGenerator;
 		}
 		
 		super.registerWorldChunkManager();

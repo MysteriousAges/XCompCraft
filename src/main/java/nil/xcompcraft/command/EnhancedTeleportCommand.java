@@ -200,7 +200,7 @@ public class EnhancedTeleportCommand extends CommandBase {
 	}
 	
 	private static EntityPlayerMP getPlayerByUsername(String playerName) {
-		return MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(playerName);
+		return MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);//.getPlayerByUsername(playerName);
 	}
 
 }

@@ -16,10 +16,11 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import nil.xcompcraft.LogHelper;
 import nil.xcompcraft.SimpleDim;
+import nil.xcompcraft.util.DuplicateDimensionIdException;
 import nil.xcompcraft.util.DuplicateTransportItemNameException;
 import nil.xcompcraft.world.SimpleDimWorldProvider;
 import nil.xcompcraft.world.type.SingleBiomeWorldType;
-import nil.xcompcraft.world.type.VoidWorldType;
+import nil.xcompcraft.world.type.SuperflatWorldType;
 
 import org.apache.commons.io.FileUtils;
 
@@ -31,7 +32,7 @@ public class Config {
 	public int defaultItemUseLength;
 	
 	public static WorldType SINGLE_BIOME = new SingleBiomeWorldType();
-	public static WorldType VOID = new VoidWorldType();
+	public static WorldType SUPERFLAT_GENERATOR = new SuperflatWorldType();
 	
 	public static String GENERAL = "General";
 	

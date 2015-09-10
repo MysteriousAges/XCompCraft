@@ -1,5 +1,8 @@
 This is the SimpleDim Dimension Configuration Information file. It should tell you how to write and
-set up your server's custom dimensions.
+set up your server's custom dimensions. It is created the first time XCompCraft is run in an
+instance and may not be updated to reflect changes that occur after the first run.
+For the most up-to-date information, please visit:
+	http://minecraft.curseforge.com/mc-mods/234839-xcompcraft/pages/main/configuration
 
 Every dimension entry consists of a name, followed by a parameter list in the form:
 	

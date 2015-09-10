@@ -15,6 +15,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod( modid = SimpleDim.NAME,
 		name = SimpleDim.NAME,
+		dependencies = "after:ATG;after:Highlands",
 		version = "@VERSION@" )
 public class SimpleDim {
 	public static final String NAME = "XCompCraft";

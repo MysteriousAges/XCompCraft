@@ -138,6 +138,10 @@ public class SimpleDimWorldFileParser {
 		if (tmp != null && !tmp.isEmpty()) {
 			info.layerColours = parseLayerColoursFromString(tmp);
 		}
+		else {
+			info.layerColours = new int[1];
+			info.layerColours[0] = 0xffffff;
+		}
 		
 		tmp = matcher.group("displayName");
 		if (tmp != null && !tmp.isEmpty()) {

@@ -33,7 +33,8 @@ public class TeleporterItem extends Item {
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+	//public ItemStack onItemUseFinish(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+	public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
 		TransportItemInfo itemInfo = TransportItemInfo.getFromItemStack(itemStack);
 		if (itemInfo != null) {
 			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && entityPlayer instanceof EntityPlayerMP) {

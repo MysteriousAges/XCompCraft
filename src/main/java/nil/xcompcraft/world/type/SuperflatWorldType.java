@@ -5,12 +5,13 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
 import nil.xcompcraft.config.DimensionInfo;
+import nil.xcompcraft.config.DimensionType;
 import nil.xcompcraft.world.SimpleDimWorldProvider;
 
-public class VoidWorldType extends WorldType {
+public class SuperflatWorldType extends WorldType {
 
-	public VoidWorldType() {
-		super("Empty World");
+	public SuperflatWorldType() {
+		super("SimpleDimFlat");
 	}
 
 	@Override
@@ -25,12 +26,16 @@ public class VoidWorldType extends WorldType {
 
 	@Override
 	public IChunkProvider getChunkGenerator(World world, String generatorOptions) {
-		String generationString = "2;1x0";
 		DimensionInfo dimInfo = ((SimpleDimWorldProvider)(world.provider)).getDimensionInfo();
-		if (dimInfo.biome != null) {
-			generationString = generationString + ";" + dimInfo.biome.biomeID; 
+		if (dimInfo.type == DimensionType.VOID) {
+			dimInfo.superflatGenerator = "2;1x0";
 		}
-		return new ChunkProviderFlat(world, world.getSeed(), false, generationString);
+		else {
+			if (dimInfo.biome != null) {
+				dimInfo.superflatGenerator = dimInfo.superflatGenerator + ";" + dimInfo.biome.biomeID; 
+			}
+		}
+		return new ChunkProviderFlat(world, world.getSeed(), false, dimInfo.superflatGenerator);
 	}
 
 	@Override

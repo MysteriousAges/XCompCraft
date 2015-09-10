@@ -26,7 +26,7 @@ group= "warg"
 archivesBaseName = "xcompcraft"
 
 minecraft {
-	mappings = "stable_12"
+//	mappings = "stable_12"
     version = project.version_mc + "-" + project.version_forge
 	runDir = "."
 	

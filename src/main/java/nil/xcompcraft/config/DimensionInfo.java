@@ -4,6 +4,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
+import nil.xcompcraft.util.WorldTypeProviderModNotPresentException;
 
 public class DimensionInfo {
 	
@@ -30,6 +31,11 @@ public class DimensionInfo {
 	public boolean validateConfiguration() {
 		if (type == DimensionType.UNKNOWN) {
 			return false;
+		}
+		else if (type.isExternalWorldType() && type.getWorldType() == null) {
+			throw new WorldTypeProviderModNotPresentException(
+					String.format("World type for %s not available (%s) - please ensure the mod that provides this world type is present!",
+							name, type.name()));
 		}
 		if (!isNameValid(name) || !isValidDimensionId(dimensionId)) {
 			return false;
