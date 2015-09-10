@@ -3,6 +3,7 @@ package nil.xcompcraft.util;
 import java.util.Collection;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.S07PacketRespawn;
@@ -55,6 +56,11 @@ public class EntityDimensionalTransportHandler {
     	if (isBlocksSuitableForSpawn(worldServer, position.posX, position.posY, position.posZ)) {
     		return position;
     	}
+    	else if (worldServer.getBlock(position.posX, position.posY, position.posZ) instanceof BlockBed) {
+    		ChunkCoordinates bedExitPos = BlockBed.getSafeExitLocation(worldServer, position.posX, position.posY, position.posZ, 0);
+    		bedExitPos.posY += 1;
+    		return bedExitPos;
+    	}
     	
     	int downwardOffset = Integer.MAX_VALUE;
     	for (int i = position.posY - 1; i >= 0; --i) {
@@ -94,6 +100,6 @@ public class EntityDimensionalTransportHandler {
     	blockCache[1] = worldServer.getBlock(x, y, z);
     	blockCache[2] = worldServer.getBlock(x, y + 1, z);
     	
-    	return blockCache[0].isSideSolid(worldServer, x, y - 1, z, ForgeDirection.UP) && blockCache[1].isPassable(worldServer, x, y, z) && blockCache[2].isPassable(worldServer, x, y + 1, z);
+    	return blockCache[0].isSideSolid(worldServer, x, y, z, ForgeDirection.UP) && !blockCache[1].getMaterial().isOpaque() && !blockCache[2].getMaterial().isOpaque();
     }
 }

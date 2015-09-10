@@ -38,10 +38,10 @@ dependencies {
 }
 
 jar {
-        manifest {
-        attributes 'FMLAT': 'simpleDimAccessTransformer.cfg'
+	manifest {
+		attributes 'FMLAT': 'XCompCraft_at.cfg'
+		exclude 'assets/xcompcraft/textures/*/*.pdn'
     }
-    exclude('*.pdn')
 }
 
 processResources
@@ -61,6 +61,7 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    	exclude '*.pdn'
     }
 }
 
