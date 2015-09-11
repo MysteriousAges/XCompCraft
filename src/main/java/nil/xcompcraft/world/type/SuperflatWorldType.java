@@ -29,8 +29,6 @@ public class SuperflatWorldType extends WorldType {
 		DimensionInfo dimInfo = ((SimpleDimWorldProvider)(world.provider)).getDimensionInfo();
 		if (dimInfo.type == DimensionType.VOID) {
 			dimInfo.superflatGenerator = "2;1x0";
-		}
-		else {
 			if (dimInfo.biome != null) {
 				dimInfo.superflatGenerator = dimInfo.superflatGenerator + ";" + dimInfo.biome.biomeID; 
 			}

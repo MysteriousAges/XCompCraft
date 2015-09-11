@@ -54,7 +54,7 @@ Other types of parameters are used in conjunction with specific types of dimensi
 	
 	generator: Used with the 'superflat' type. Controls what the world consists of. Uses the same
 			format as the Superflat configuration screen, such as what you can build and customize
-			using http://www.minecraft101.net/superflat/
+			using http://www.minecraft101.net/superflat_legacy/
 			Must be enclosed with either single or double quotes.
 			Only applicable to 'superflat' type.
 	
