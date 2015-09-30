@@ -11,6 +11,7 @@ public enum DimensionType {
 	VOID("void", Config.SUPERFLAT_GENERATOR),
 	SINGLE_BIOME("singlebiome", Config.SINGLE_BIOME),
 	ATG("atg", WorldType.parseWorldType("ATG"), true),
+	FUNWORLD("fwg", WorldType.parseWorldType("FWG")),
 	;
 	
 	private String name;

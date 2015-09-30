@@ -40,7 +40,7 @@ public class DimensionInfo {
 		if (!isNameValid(name) || !isValidDimensionId(dimensionId)) {
 			return false;
 		}
-		else if (type == DimensionType.SUPERFLAT) {
+		else if (type == DimensionType.SUPERFLAT || type == DimensionType.FUNWORLD) {
 			return superflatGenerator != null && !superflatGenerator.isEmpty();
 		}
 		else if (type == DimensionType.VOID) {

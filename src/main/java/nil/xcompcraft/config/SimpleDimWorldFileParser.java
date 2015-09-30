@@ -161,7 +161,7 @@ public class SimpleDimWorldFileParser {
 
 	private BiomeGenBase parseBiomeFromString(String tmp) {
 		for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
-			if (biome.biomeName.replace(" ", "").equalsIgnoreCase(tmp)) {
+			if (biome.biomeName.equalsIgnoreCase(tmp)) {
 				return biome;
 			}
 		}
